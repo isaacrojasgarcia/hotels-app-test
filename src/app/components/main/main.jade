@@ -1,0 +1,26 @@
+.container
+  div(ng-include="'components/navbar/navbar.html'")
+  .table-responsive 
+    table.table.table-striped
+      tr
+        th 
+        th Name
+        th Distance
+        
+      tr(ng-repeat="hotel in hotels") 
+        td 
+          img.img-rounded(src="{{ hotel.ThumbnailUrl }}" alt="{{ hotel.Name }}")
+        td 
+          div 
+            strong {{ hotel.Name }}
+          div
+            span.glyphicon.glyphicon-star.star-color(aria-hidden="true" ng-repeat="i in getNumber(hotel.Stars) track by $index")
+          div(ng-if="hotel.UserRating")
+            span Rating: {{ hotel.UserRating }}/10
+        td
+          div {{ hotel.Distance }}
+            
+  .footer
+    p 
+      | With ♥ from 
+      a(href="https://twitter.com/trepafi") Lubert
