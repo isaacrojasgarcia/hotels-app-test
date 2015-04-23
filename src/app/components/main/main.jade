@@ -1,25 +1,84 @@
 .container
   div(ng-include="'components/navbar/navbar.html'")
-  .table-responsive 
-    table.table.table-striped
-      tr
-        th 
-        th Name
-        th Distance
-        
-      tr(ng-repeat="hotel in hotels") 
-        td 
-          img.img-rounded(src="{{ hotel.ThumbnailUrl }}" alt="{{ hotel.Name }}")
-        td 
-          div 
-            strong {{ hotel.Name }}
-          div
-            span.glyphicon.glyphicon-star.star-color(aria-hidden="true" ng-repeat="i in getNumber(hotel.Stars) track by $index")
-          div(ng-if="hotel.UserRating")
-            span Rating: {{ hotel.UserRating }}/10
-        td
-          div {{ hotel.Distance }}
+    
+  .row
+    .col-sm-12.col-md-3.col-lg-3
+      .list-group
+        li.list-group-item.list-group-item-info Sort By
+        li.list-group-item
+          a(href="#" ng-click="orderBy('Distance');") Distance
+          span &nbsp;
+          span.glyphicon.glyphicon-chevron-up(ng-show="predicate === 'Distance' && !reverse")
+          span.glyphicon.glyphicon-chevron-down(ng-show="predicate === 'Distance' && !!reverse")
+        li.list-group-item 
+          a(href="#" ng-click="orderBy('Stars');") Stars
+          span &nbsp;
+          span.glyphicon.glyphicon-chevron-up(ng-show="predicate === 'Stars' && !reverse")
+          span.glyphicon.glyphicon-chevron-down(ng-show="predicate === 'Stars' && !!reverse")
+        li.list-group-item 
+          a(href="#" ng-click="orderBy('MinCost');") Minimum Cost
+          span &nbsp;
+          span.glyphicon.glyphicon-chevron-up(ng-show="predicate === 'MinCost' && !reverse")
+          span.glyphicon.glyphicon-chevron-down(ng-show="predicate === 'MinCost' && !!reverse")
+        li.list-group-item
+          a(href="#" ng-click="orderBy('UserRating');") User Rating
+          span &nbsp;
+          span.glyphicon.glyphicon-chevron-up(ng-show="predicate === 'UserRating' && !reverse")
+          span.glyphicon.glyphicon-chevron-down(ng-show="predicate === 'UserRating' && !!reverse")
+      .list-group
+        li.list-group-item.list-group-item-info Filter By
+        li.list-group-item 
+          strong Name 
+          input(type="text" value="" ng-model="filtering.Name")
+        li.list-group-item 
+          strong Stars 
+          a(href="#")
+            span.glyphicon.glyphicon-star-empty(aria-hidden="true" ng-repeat="i in getNumber(maxStars) track by $index" ng-click="setStars($index + 1)" ng-class="{'glyphicon-star star-color': $index  < filtering.Stars }")
+        li.list-group-item 
+          strong User Rating 
+          input(type="text" value="" ng-model="filtering.UserRating")
+        li.list-group-item 
+          strong Minimum Cost
+          input(type="text" value="" ng-model="filtering.MinCost")
             
+    .col-sm-12.col-md-9.col-lg-9  
+      .table-responsive(ng-if="hotels.length > 0")
+        table.table.table-striped
+          tr
+            th 
+            th.align-center 
+              span Name &nbsp;
+              
+            th.align-center Rating
+            th.align-center From
+            
+          tr(ng-repeat="hotel in hotels | filter:filterData | orderBy:predicate:reverse as results track by $index") 
+            td 
+              img.img-rounded(src="{{ hotel.ThumbnailUrl }}" alt="{{ hotel.Name }}")
+            td 
+              div 
+                strong {{ hotel.Name }}
+              div
+                span.glyphicon.glyphicon-star.star-color(aria-hidden="true" ng-repeat="i in getNumber(hotel.Stars) track by $index")
+              div {{ hotel.Distance | number:2 }} Km
+              //- div
+              //-   img.img-rounded(src="{{ hotel.ImageUrl }}" alt="{{ hotel.Name }}")
+                
+            td.align-center
+              div(ng-if="hotel.UserRating")
+                strong {{ hotel.UserRating }}
+                
+              div(ng-if="hotel.UserRatingCount") 
+                span.badge {{ hotel.UserRatingCount }}
+                span &nbsp;
+                span.glyphicon.glyphicon-thumbs-up
+                  
+              div(ng-if="hotel.UserRatingTitle") 
+                span.label {{ hotel.UserRatingTitle }}
+              
+            td.hotel-price
+              div {{ hotel.MinCost | number:2 }} £
+                
   .footer
     p 
       | With ♥ from 

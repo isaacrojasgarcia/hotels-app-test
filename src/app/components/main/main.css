@@ -16,3 +16,11 @@
 .star-color {
     color: #f90;
 }
+
+.hotel-price {
+  text-align: right;
+}
+
+.align-center {
+  text-align: center;
+}

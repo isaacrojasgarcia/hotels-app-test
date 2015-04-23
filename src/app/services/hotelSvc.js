@@ -4,11 +4,12 @@ angular.module('ltapp')
 function HotelsSvc($http, $q, _) {
   var data = [];
 
-  function loadData() {
+  function loadData(page) {
     var deferred = $q.defer();
     $http.get('/data/hotels.json')
       .success(function(response) {
         data = _.slice(response.Establishments, 1, 20);
+        // data = response.Establishments;
         deferred.resolve(data);
       })
       .error(function(error) {
